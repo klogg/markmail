@@ -11,5 +11,5 @@ if __name__ == '__main__':
 
     messages = markmail.search('list%3Aorg.apache.announce+order%3Adate-backward')
 
-    print messages
+    print(messages)
 
