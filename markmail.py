@@ -26,7 +26,7 @@ A simple python client for MarkMail hacky API
 Futher details at: http://pastebin.com/M5NnyEZ8
 """
 
-import urllib
+import urllib.request
 import simplejson as json
 from io import StringIO
 from datetime import datetime, timedelta
