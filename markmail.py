@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-# LinkedMarkMail, an RDFizer for Mark Mail 
+# LinkedMarkMail, an RDFizer for Mark Mail
 #
 # Copyright (C) 2011 Sergio Fernández
 #
 # This file is part of SWAML <http://swaml.berlios.de/>
-# 
+#
 # LinkedMarkMail is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # LinkedMarkMail is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with LinkedMarkMail. If not, see <http://www.gnu.org/licenses/>.
 
@@ -39,7 +39,7 @@ class MarkMail:
     def __init__(self, base="http://markmail.org"):
         self.base = base
         self.p_yesterday = re.compile('^yesterday.*', re.IGNORECASE)
-        
+
     def search(self, query, page=1, mode="json"):
         uri = "%s/results.xqy?q=%s&page=%d&mode=%s" % (self.base, query, page, mode)
         response = self.__request(uri).read()
@@ -53,7 +53,7 @@ class MarkMail:
         response = self.__request(uri).read()
         obj = json.load(StringIO(response))
         message = obj["message"]
-        if (message["subject"]==None or message["subject"]==None):            
+        if (message["subject"]==None or message["subject"]==None):
             return None
         else:
             return message
@@ -66,13 +66,13 @@ class MarkMail:
         if (thread["subject"]==None or thread["list"]==None):
             return None
         return thread
-        
+
     def parse_date(self, date):
         if (date is None):
             return None
-       
+
         date = date.rstrip()
- 
+
         # yesterday
         regex = re.compile("^yesterday\s+(\d+):(\d+)\s.m",re.IGNORECASE)
         r = regex.search(date)
@@ -86,7 +86,7 @@ class MarkMail:
             d = d.astimezone(tz=timezone('America/Los_Angeles'))
             d = datetime.strptime(d.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
             return d
-            
+
         # today
         regex = re.compile("^today\s*(\d*):(\d*)\s.m",re.IGNORECASE)
         r = regex.search(date)
@@ -99,7 +99,7 @@ class MarkMail:
             d = d.astimezone(tz=timezone('America/Los_Angeles'))
             d = datetime.strptime(d.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
             return d
-        
+
         # n days ago
         regex = re.compile("^(\d*)\sdays\sago",re.IGNORECASE)
         r = regex.search(date)
@@ -111,28 +111,27 @@ class MarkMail:
             d = d.astimezone(tz=timezone('America/Los_Angeles'))
             d = datetime.strptime(d.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
             return d
-        
+
         # default parse date string
         d = datetime.strptime(date, '%b %d, %Y')
         d = d.replace(tzinfo=timezone('UTC'))
         d = d.astimezone(tz=timezone('America/Los_Angeles'))
         d = datetime.strptime(d.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
         return d
-        
+
     def __request(self, uri, accept="application/json"):
         """
         Generic HTTP request
-       
+
         @param uri: uri to request
         @return: response
         @rtype: file-like object
         """
-       
+
         headers = {
                     "User-Agent" : "swaml (http://swaml.berlios.de/; sergio@wikier.org)",
                     "Accept"     : accept
                   }
         request = urllib.request.Request(uri, headers=headers)
         return urllib.request.urlopen(request)
-
 
