@@ -51,6 +51,7 @@ class MarkMail:
     def get_message(self, key, mode="json"):
         uri = "%s/message.xqy?id=%s&mode=%s" % (self.base, key, mode)
         response = self.__request(uri).read()
+        response = response.decode('utf8').replace('\t', '')
         obj = json.load(StringIO(response))
         message = obj["message"]
         if (message["subject"]==None or message["subject"]==None):
@@ -61,6 +62,7 @@ class MarkMail:
     def get_thread(self, key, mode="json"):
         uri = "%s/thread.xqy?id=%s&mode=%s" % (self.base, key, mode)
         response = self.__request(uri).read()
+        response = response.decode('utf8').replace('\t', '')
         obj = json.load(StringIO(response))
         thread = obj["thread"]
         if (thread["subject"]==None or thread["list"]==None):
