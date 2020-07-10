@@ -30,6 +30,7 @@ class MyHTMLParser(HTMLParser):
                     # parsing successful
                     if (info.group('count')==None or int(info.group('count')) == 0):
                         print(info.group('type') + " " + info.group('topic'))
+                        print(data)
             self.topic = None
         else:
             if (data == "Subject:"):
@@ -51,19 +52,20 @@ if __name__ == '__main__':
 
     while True:
         messages = markmail.search(msg, page)
-        #print(json.dumps(messages, indent=4, sort_keys=True))
+        print(json.dumps(messages, indent=4, sort_keys=True))
 
-        if page > int(messages['search']['numpages']):
+        if (page > int(messages['search']['numpages'])):
             break
 
         page = page + 1
 
         for result in messages['search']['results']['result']:
+            print(json.dumps(thread, indent=4, sort_keys=True))
 
             thread = markmail.get_thread(result['thread_id'])
             if (thread not in thread_list):
                 thread_list.append(thread)
-                #print(json.dumps(thread, indent=4, sort_keys=True))
+                print(json.dumps(thread, indent=4, sort_keys=True))
 
                 for thread_msg in thread['messages']['message']:
                     message = markmail.get_message(thread_msg['id'])
